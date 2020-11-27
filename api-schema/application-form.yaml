@@ -1,0 +1,163 @@
+openapi: 3.0.0
+info:
+  description: "Digital Customer Onboarding"
+  version: "1.0.0"
+  title: "Banking - Origination"
+  termsOfService: "https://github.com/Toblerones/Banking-Origination"
+  contact:
+    email: "toblerones@hotmail.com"
+
+servers:
+  - url: https://{subdomain}.com{system}
+    description: Backend API
+    variables:
+      subdomain:
+        default: toblerones
+      version:
+        enum:
+          - v1
+          - v2
+        default: v1
+      system:
+        default: '/api'
+
+security:
+  - bearerAuth: []
+
+paths:
+  /applications/{appId}:
+    get:
+      summary: get application
+      tags:
+        - Application
+      description: Return all application
+      parameters:
+        - in: header
+          name: X-Request-ID
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: X-Session-ID
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: X-Channel-ID
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: appId
+          schema:
+            type: string
+          required: true
+          description: Unique applicaiton Id
+      responses:
+        '200':    # status code
+          description: A JSON array of applications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+
+  /application:
+    post:
+      tags:
+        - Application
+      description: create or update application
+      parameters:
+        - in: header
+          name: X-Request-ID
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: header
+          name: X-Session-ID
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: header
+          name: X-Channel-ID
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        description: create application
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+      responses:
+        '201':
+          description: yes
+
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+
+  schemas:
+    Application:
+      title: Customer Application
+      type: object
+      properties:
+        applicationId:
+          type: string
+          description: application number
+        customer:
+          $ref: '#/components/schemas/Customer'
+        product:
+          $ref: '#/components/schemas/Product'
+        status:
+          type: string
+    Customer:
+      title: Customer Info
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: first name
+        lastName:
+          type: string
+          description: lsat name
+        dateOfBirth:
+          type: string
+          description: date of birth
+        mobileNumber:
+          type: string
+          description: mobile number
+        address:
+          type: string
+          description: address
+        email:
+          type: string
+          description: email
+    Product:
+      title: Product Info
+      type: object
+      properties:
+        productCodes:
+          type: array
+          items:
+            type: string
+        mainCurrency:
+          type: string
+        subCurrencies:
+          type: array
+          items:
+            type: string
+
+
+
+
+
+
+
+

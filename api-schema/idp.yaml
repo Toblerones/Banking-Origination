@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  description: "Identity Provider Service"
+  version: "1.0.0"
+  title: "Banking - Origination"
+  termsOfService: "https://github.com/Toblerones/Banking-Origination"
+  contact:
+    email: "toblerones@hotmail.com"
+
+servers:
+  - url: https://{subdomain}.com{system}
+    description: Backend API
+    variables:
+      subdomain:
+        default: toblerones
+      version:
+        enum:
+          - v1
+          - v2
+        default: v1
+      system:
+        default: '/api'
+
+security:
+  - basicAuth: []
+
+paths:
+  /token-validation:
+    post:
+      security:
+        - basicAuth: []
+      tags:
+        - Auth Token
+      description: get JWT token
+      parameters:
+        - in: header
+          name: X-Request-ID
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: X-Session-ID
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: X-Channel-ID
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: data to be valided to get token
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Token'
+      responses:
+        '200':
+          description: yes
+  /token:
+    post:
+      tags:
+        - Auth Token
+      description: get JWT token
+      parameters:
+        - in: header
+          name: X-Request-ID
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: header
+          name: X-Session-ID
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: header
+          name: X-Channel-ID
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        description: data to be valided to get token
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationData'
+      responses:
+        '200':
+          description: yes
+
+components:
+  securitySchemes:
+    basicAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: basic
+
+  schemas:
+    AuthenticationData:
+      title: Customer Application
+      type: object
+      properties:
+        applicationId:
+          type: string
+          description: application number
+        customer:
+          $ref: '#/components/schemas/Customer'
+    Customer:
+      title: Customer Info
+      type: object
+      properties:
+        dateOfBirth:
+          type: string
+          description: date of birth
+        mobileNumber:
+          type: string
+          description: mobile Number
+        email:
+          type: string
+          description: email
+
+    Token:
+      title: token to be validated
+      type: object
+      properties:
+        access_token:
+          type: string
+
+
+
+
+
+
+
+
