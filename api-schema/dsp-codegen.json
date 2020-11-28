@@ -1,0 +1,10 @@
+{
+  "groupId":"com.tobs.digital.security",
+  "artifactId":"au-tobs-digital-security-platform",
+  "artifactVersion":"1.0.0",
+  "basePackage": "com.tobs.digital.security.platform",
+  "apiPackage": "com.tobs.digital.security.platform.controller",
+  "modelPackage" : "com.tobs.digital.security.platform.domain",
+  "configPackage" : "com.tobs.digital.security.platform.config",
+  "library":"spring-boot"
+}

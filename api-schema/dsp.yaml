@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: "Identity Provider Service"
+  description: "Digital Security Platform"
   version: "1.0.0"
   title: "Banking - Origination"
   termsOfService: "https://github.com/Toblerones/Banking-Origination"
@@ -68,19 +68,16 @@ paths:
           name: X-Request-ID
           schema:
             type: string
-            format: uuid
           required: true
         - in: header
           name: X-Session-ID
           schema:
             type: string
-            format: uuid
           required: true
         - in: header
           name: X-Channel-ID
           schema:
             type: string
-            format: uuid
           required: true
       requestBody:
         description: data to be valided to get token
@@ -92,6 +89,16 @@ paths:
       responses:
         '200':
           description: yes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/DownstreamError'
 
 components:
   securitySchemes:
@@ -99,7 +106,38 @@ components:
       type: http
       scheme: basic
 
+  responses:
+    InternalError:
+      description: Internal Server Error (runtime)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    DownstreamError:
+      description: Unknow downstream error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
     AuthenticationData:
       title: Customer Application
       type: object

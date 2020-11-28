@@ -1,0 +1,10 @@
+{
+  "groupId":"com.tobs.origination",
+  "artifactId":"au-tobs-origination-digital-form",
+  "artifactVersion":"1.0.0",
+  "basePackage": "com.tobs.origination.digital",
+  "apiPackage": "com.tobs.origination.digital.controller",
+  "modelPackage" : "com.tobs.origination.digital.domain",
+  "configPackage" : "com.tobs.origination.digital.config",
+  "library":"spring-boot"
+}
