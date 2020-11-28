@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: "Digital Customer Onboarding"
+  description: "Digital Form for Customer Onboarding"
   version: "1.0.0"
   title: "Banking - Origination"
   termsOfService: "https://github.com/Toblerones/Banking-Origination"
@@ -12,7 +12,7 @@ servers:
     description: Backend API
     variables:
       subdomain:
-        default: toblerones
+        default: toblers
       version:
         enum:
           - v1
@@ -25,11 +25,11 @@ security:
   - bearerAuth: []
 
 paths:
-  /applications/{appId}:
+  /digital-form/{appId}:
     get:
-      summary: get application
+      summary: get digital-form
       tags:
-        - Application
+        - Digital Form
       description: Return all application
       parameters:
         - in: header
@@ -67,10 +67,10 @@ paths:
         '503':
           $ref: '#/components/responses/DownstreamError'
 
-  /application:
+  /digital-form:
     post:
       tags:
-        - Application
+        - Digital Form
       description: create or update application
       parameters:
         - in: header
