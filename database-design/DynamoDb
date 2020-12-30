@@ -1,0 +1,9 @@
+design per journey
+
+from digital form perspective
+- Save application with application ID
+- Get application by application ID
+- Search application by dob and (email or mobile)
+
+DSP perspective
+- Identify customer via dob and (email or mobile)

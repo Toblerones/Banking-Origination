@@ -3,8 +3,11 @@ package com.toblers.origination.digital.domain;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.toblers.origination.digital.domain.Address;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -12,7 +15,7 @@ import javax.validation.constraints.*;
 /**
  * Customer
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-11-28T15:39:41.468334+11:00[Australia/Sydney]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-12-30T15:18:13.367822+11:00[Australia/Sydney]")
 
 public class Customer   {
   @JsonProperty("firstName")
@@ -27,11 +30,12 @@ public class Customer   {
   @JsonProperty("mobileNumber")
   private String mobileNumber;
 
-  @JsonProperty("address")
-  private String address;
-
   @JsonProperty("email")
   private String email;
+
+  @JsonProperty("Addresses")
+  @Valid
+  private List<Address> addresses = null;
 
   public Customer firstName(String firstName) {
     this.firstName = firstName;
@@ -113,26 +117,6 @@ public class Customer   {
     this.mobileNumber = mobileNumber;
   }
 
-  public Customer address(String address) {
-    this.address = address;
-    return this;
-  }
-
-  /**
-   * address
-   * @return address
-  */
-  @ApiModelProperty(value = "address")
-
-
-  public String getAddress() {
-    return address;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
   public Customer email(String email) {
     this.email = email;
     return this;
@@ -153,6 +137,35 @@ public class Customer   {
     this.email = email;
   }
 
+  public Customer addresses(List<Address> addresses) {
+    this.addresses = addresses;
+    return this;
+  }
+
+  public Customer addAddressesItem(Address addressesItem) {
+    if (this.addresses == null) {
+      this.addresses = new ArrayList<>();
+    }
+    this.addresses.add(addressesItem);
+    return this;
+  }
+
+  /**
+   * Get addresses
+   * @return addresses
+  */
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public List<Address> getAddresses() {
+    return addresses;
+  }
+
+  public void setAddresses(List<Address> addresses) {
+    this.addresses = addresses;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -167,13 +180,13 @@ public class Customer   {
         Objects.equals(this.lastName, customer.lastName) &&
         Objects.equals(this.dateOfBirth, customer.dateOfBirth) &&
         Objects.equals(this.mobileNumber, customer.mobileNumber) &&
-        Objects.equals(this.address, customer.address) &&
-        Objects.equals(this.email, customer.email);
+        Objects.equals(this.email, customer.email) &&
+        Objects.equals(this.addresses, customer.addresses);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(firstName, lastName, dateOfBirth, mobileNumber, address, email);
+    return Objects.hash(firstName, lastName, dateOfBirth, mobileNumber, email, addresses);
   }
 
   @Override
@@ -185,8 +198,8 @@ public class Customer   {
     sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
     sb.append("    mobileNumber: ").append(toIndentedString(mobileNumber)).append("\n");
-    sb.append("    address: ").append(toIndentedString(address)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    addresses: ").append(toIndentedString(addresses)).append("\n");
     sb.append("}");
     return sb.toString();
   }

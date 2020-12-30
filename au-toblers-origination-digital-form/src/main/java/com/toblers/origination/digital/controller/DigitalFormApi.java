@@ -5,7 +5,7 @@
  */
 package com.toblers.origination.digital.controller;
 
-import com.toblers.origination.digital.domain.Application;
+import com.toblers.origination.digital.domain.DigitalForm;
 import com.toblers.origination.digital.domain.Error;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-11-28T15:39:41.468334+11:00[Australia/Sydney]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-12-30T15:18:13.367822+11:00[Australia/Sydney]")
 
 @Validated
 @Api(value = "digital-form", description = "the digital-form API")
@@ -39,34 +39,34 @@ public interface DigitalFormApi {
     }
 
     /**
-     * GET /digital-form/{appId} : get digital-form
-     * Return all application
+     * GET /digital-form/{formId} : get digital-form
+     * Return all digital forms.
      *
      * @param xRequestID  (required)
      * @param xSessionID  (required)
      * @param xChannelID  (required)
-     * @param appId Unique applicaiton Id (required)
-     * @return A JSON array of applications (status code 200)
+     * @param formId Unique applicaiton Id (required)
+     * @return A JSON array of digital forms (status code 200)
      *         or Unauthorized (status code 401)
      *         or Internal Server Error (runtime) (status code 500)
      *         or Unknow downstream error (status code 503)
      */
-    @ApiOperation(value = "get digital-form", nickname = "digitalFormAppIdGet", notes = "Return all application", response = Application.class, authorizations = {
+    @ApiOperation(value = "get digital-form", nickname = "digitalFormFormIdGet", notes = "Return all digital forms.", response = DigitalForm.class, authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "Digital Form", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "A JSON array of applications", response = Application.class),
+        @ApiResponse(code = 200, message = "A JSON array of digital forms", response = DigitalForm.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
         @ApiResponse(code = 500, message = "Internal Server Error (runtime)", response = Error.class),
         @ApiResponse(code = 503, message = "Unknow downstream error", response = Error.class) })
-    @RequestMapping(value = "/digital-form/{appId}",
+    @RequestMapping(value = "/digital-form/{formId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<Application> digitalFormAppIdGet(@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Request-ID", required=true) String xRequestID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Session-ID", required=true) String xSessionID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Channel-ID", required=true) String xChannelID,@ApiParam(value = "Unique applicaiton Id",required=true) @PathVariable("appId") String appId) {
+    default ResponseEntity<DigitalForm> digitalFormFormIdGet(@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Request-ID", required=true) String xRequestID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Session-ID", required=true) String xSessionID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Channel-ID", required=true) String xChannelID,@ApiParam(value = "Unique applicaiton Id",required=true) @PathVariable("formId") String formId) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"product\" : { \"mainCurrency\" : \"mainCurrency\", \"subCurrencies\" : [ \"subCurrencies\", \"subCurrencies\" ], \"productCodes\" : [ \"productCodes\", \"productCodes\" ] }, \"applicationId\" : \"applicationId\", \"customer\" : { \"firstName\" : \"firstName\", \"lastName\" : \"lastName\", \"address\" : \"address\", \"mobileNumber\" : \"mobileNumber\", \"dateOfBirth\" : \"dateOfBirth\", \"email\" : \"email\" }, \"status\" : \"status\" }";
+                    String exampleString = "{ \"formId\" : \"formId\", \"product\" : { \"mainCurrency\" : \"mainCurrency\", \"subCurrencies\" : [ \"subCurrencies\", \"subCurrencies\" ], \"productCodes\" : [ \"productCodes\", \"productCodes\" ] }, \"customer\" : { \"Addresses\" : [ { \"country\" : \"country\", \"detail\" : \"detail\", \"type\" : \"type\" }, { \"country\" : \"country\", \"detail\" : \"detail\", \"type\" : \"type\" } ], \"firstName\" : \"firstName\", \"lastName\" : \"lastName\", \"mobileNumber\" : \"mobileNumber\", \"dateOfBirth\" : \"dateOfBirth\", \"email\" : \"email\" }, \"status\" : \"status\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -79,18 +79,18 @@ public interface DigitalFormApi {
 
     /**
      * POST /digital-form
-     * create or update application
+     * create or update Digital Form
      *
      * @param xRequestID  (required)
      * @param xSessionID  (required)
      * @param xChannelID  (required)
-     * @param application create application (required)
+     * @param digitalForm create application (required)
      * @return true (status code 200)
      *         or Unauthorized (status code 401)
      *         or Internal Server Error (runtime) (status code 500)
      *         or Unknow downstream error (status code 503)
      */
-    @ApiOperation(value = "", nickname = "digitalFormPost", notes = "create or update application", authorizations = {
+    @ApiOperation(value = "", nickname = "digitalFormPost", notes = "create or update Digital Form", authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "Digital Form", })
     @ApiResponses(value = { 
@@ -102,7 +102,7 @@ public interface DigitalFormApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<Void> digitalFormPost(@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Request-ID", required=true) String xRequestID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Session-ID", required=true) String xSessionID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Channel-ID", required=true) String xChannelID,@ApiParam(value = "create application" ,required=true )  @Valid @RequestBody Application application) {
+    default ResponseEntity<Void> digitalFormPost(@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Request-ID", required=true) String xRequestID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Session-ID", required=true) String xSessionID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-Channel-ID", required=true) String xChannelID,@ApiParam(value = "create application" ,required=true )  @Valid @RequestBody DigitalForm digitalForm) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

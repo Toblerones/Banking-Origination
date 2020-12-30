@@ -25,12 +25,12 @@ security:
   - bearerAuth: []
 
 paths:
-  /digital-form/{appId}:
+  /digital-form/{formId}:
     get:
       summary: get digital-form
       tags:
         - Digital Form
-      description: Return all application
+      description: Return all digital forms.
       parameters:
         - in: header
           name: X-Request-ID
@@ -48,18 +48,18 @@ paths:
             type: string
           required: true
         - in: path
-          name: appId
+          name: formId
           schema:
             type: string
           required: true
           description: Unique applicaiton Id
       responses:
         '200':    # status code
-          description: A JSON array of applications
+          description: A JSON array of digital forms
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Application'
+                $ref: '#/components/schemas/DigitalForm'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
@@ -71,7 +71,7 @@ paths:
     post:
       tags:
         - Digital Form
-      description: create or update application
+      description: create or update Digital Form
       parameters:
         - in: header
           name: X-Request-ID
@@ -94,7 +94,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Application'
+              $ref: '#/components/schemas/DigitalForm'
       responses:
         '200':
           description: yes
@@ -144,13 +144,13 @@ components:
         - code
         - message
 
-    Application:
-      title: Customer Application
+    DigitalForm:
+      title: Customer digital form
       type: object
       properties:
-        applicationId:
+        formId:
           type: string
-          description: application number
+          description: digital form number
         customer:
           $ref: '#/components/schemas/Customer'
         product:
@@ -173,12 +173,13 @@ components:
         mobileNumber:
           type: string
           description: mobile number
-        address:
-          type: string
-          description: address
         email:
           type: string
           description: email
+        Addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
     Product:
       title: Product Info
       type: object
@@ -193,3 +194,16 @@ components:
           type: array
           items:
             type: string
+    Address:
+      title: Address object
+      type: object
+      properties:
+        type:
+          type: string
+          description: address type
+        detail:
+          type: string
+          description: address detail
+        country:
+          type: string
+          description: country of address
