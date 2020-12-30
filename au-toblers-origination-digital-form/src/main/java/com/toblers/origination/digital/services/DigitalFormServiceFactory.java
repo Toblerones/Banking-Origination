@@ -1,10 +1,12 @@
 package com.toblers.origination.digital.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
+@Service
 public class DigitalFormServiceFactory {
 
     @Autowired
