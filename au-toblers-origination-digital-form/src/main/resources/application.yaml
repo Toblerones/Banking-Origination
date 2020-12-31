@@ -13,3 +13,8 @@ spring:
 
 default:
   profile: local
+
+
+amazon.dynamodb.endpoint: http://localhost:8000/
+amazon.aws.accesskey: tw725l
+amazon.aws.secretkey: ip3qk
