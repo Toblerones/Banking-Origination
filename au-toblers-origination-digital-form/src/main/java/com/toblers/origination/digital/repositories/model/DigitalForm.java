@@ -13,6 +13,7 @@ public class DigitalForm {
     public String statusCreatedAt;
 
     @DynamoDbPartitionKey
+    @DynamoDbSecondaryPartitionKey(indexNames = "statusAndCreatedAt")
     @DynamoDbAttribute(value = "PK")
     public String getPk() {
         return pk;
@@ -59,7 +60,7 @@ public class DigitalForm {
         this.createdAt = createdAt;
     }
 
-    @DynamoDbSecondaryPartitionKey(indexNames = "statusAndCreatedAt")
+    @DynamoDbSecondarySortKey(indexNames = "statusAndCreatedAt")
     @DynamoDbAttribute(value = "statusCreatedAt")
     public String getStatusCreatedAt() {
         return statusCreatedAt;

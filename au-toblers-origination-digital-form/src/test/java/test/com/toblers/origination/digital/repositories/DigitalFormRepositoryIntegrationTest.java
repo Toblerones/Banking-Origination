@@ -77,7 +77,7 @@ public class DigitalFormRepositoryIntegrationTest {
 
         SdkPublisher<Page<DigitalForm>> customersWithName =
                 secIndex.query(r -> r.queryConditional(
-                        keyEqualTo(k -> k.partitionValue("IC#102002012021"))));
+                        keyEqualTo(k -> k.partitionValue("FORM#ABC123").sortValue("IC#102002012021"))));
 
         AtomicInteger atomicInteger = new AtomicInteger();
         atomicInteger.set(0);
