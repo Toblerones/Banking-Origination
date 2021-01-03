@@ -1,62 +1,71 @@
 package com.toblers.origination.digital.repositories.model;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import org.springframework.data.annotation.Id;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
-@DynamoDBTable(tableName = "digital_form")
+@DynamoDbBean
 public class DigitalForm {
 
-    @Id
-    private DigitalFormId digitalFormId;
-
+    private String pk;
+    private String sk;
     public String status;
     public String products;
+    public String createdAt;
+    public String statusCreatedAt;
 
-    @DynamoDBAttribute
-    public String getStatus() {
-        return status;
-    }
-
-    @DynamoDBAttribute
-    public String getProducts() {
-        return products;
-    }
-
-    @DynamoDBHashKey(attributeName = "FormNumber")
+    @DynamoDbPartitionKey
+    @DynamoDbAttribute(value = "PK")
     public String getPk() {
-        return digitalFormId.getPk();
+        return pk;
     }
 
     public void setPk(String pk) {
-        digitalFormId.setPk(pk);
+        this.pk = pk;
     }
 
-    @DynamoDBRangeKey(attributeName = "info")
+    @DynamoDbSortKey
+    @DynamoDbAttribute(value = "SK")
     public String getSk() {
-        return digitalFormId.getSk();
+        return sk;
     }
 
     public void setSk(String sk) {
-        digitalFormId.setSk(sk);
+        this.sk = sk;
     }
 
-
-    public DigitalFormId getDigitalFormId() {
-        return digitalFormId;
-    }
-
-    public void setDigitalFormId(DigitalFormId digitalFormId) {
-        this.digitalFormId = digitalFormId;
+    @DynamoDbAttribute(value = "status")
+    public String getStatus() {
+        return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
     }
 
+    @DynamoDbAttribute(value = "products")
+    public String getProducts() {
+        return products;
+    }
+
     public void setProducts(String products) {
         this.products = products;
+    }
+
+    @DynamoDbAttribute(value = "createdAt")
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @DynamoDbSecondarySortKey(indexNames = "statusAndCreatedAt")
+    @DynamoDbAttribute(value = "statusCreatedAt")
+    public String getStatusCreatedAt() {
+        return statusCreatedAt;
+    }
+
+    public void setStatusCreatedAt(String statusCreatedAt) {
+        this.statusCreatedAt = statusCreatedAt;
     }
 }

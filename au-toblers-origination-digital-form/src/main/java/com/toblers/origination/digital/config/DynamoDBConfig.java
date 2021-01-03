@@ -1,22 +1,17 @@
 package com.toblers.origination.digital.config;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
-import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.StringUtils;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedAsyncClient;
+import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
+
+import java.net.URI;
 
 @Configuration
-@EnableDynamoDBRepositories
-        (basePackages = "com.toblers.origination.digital.repositories")
 public class DynamoDBConfig {
 
     @Value("${amazon.dynamodb.endpoint}")
@@ -29,28 +24,17 @@ public class DynamoDBConfig {
     private String amazonAWSSecretKey;
 
     @Bean
-    public AmazonDynamoDB amazonDynamoDB() {
-        AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
-                .standard()
-                .withCredentials(awsCredentialsProvider())
-                .withEndpointConfiguration(endpointConfiguration())
+    public DynamoDbAsyncClient getDynamoDbAsyncClient() {
+        return DynamoDbAsyncClient.builder()
+                .endpointOverride(URI.create(amazonDynamoDBEndpoint))
+                .credentialsProvider(() -> AwsBasicCredentials.create(amazonAWSAccessKey ,amazonAWSSecretKey))
                 .build();
-        return amazonDynamoDB;
     }
 
     @Bean
-    public AWSCredentialsProvider awsCredentialsProvider(){
-        return new EnvironmentVariableCredentialsProvider();
-    }
-
-    @Bean
-    public AwsClientBuilder.EndpointConfiguration endpointConfiguration(){
-        return new AwsClientBuilder.EndpointConfiguration(amazonDynamoDBEndpoint, "us-west-2");
-    }
-
-    @Bean
-    public AWSCredentials amazonAWSCredentials() {
-        return new BasicAWSCredentials(
-                amazonAWSAccessKey, amazonAWSSecretKey);
+    public DynamoDbEnhancedAsyncClient getDynamoDbEnhancedAsyncClient() {
+        return DynamoDbEnhancedAsyncClient.builder()
+                .dynamoDbClient(getDynamoDbAsyncClient())
+                .build();
     }
 }
