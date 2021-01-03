@@ -14,12 +14,15 @@ import software.amazon.awssdk.core.async.SdkPublisher;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
+import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.keyEqualTo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = OpenAPI2SpringBoot.class)
@@ -51,30 +54,36 @@ public class DigitalFormRepositoryIntegrationTest {
 
     @Test
     public void testFindByGSi() throws ExecutionException, InterruptedException {
-        DynamoDbAsyncIndex<DigitalForm> secIndex =
-                dynamoDbEnhancedAsyncClient.table("digital_form",
-                        TableSchema.fromBean(DigitalForm.class))
+        DynamoDbAsyncTable<DigitalForm> digitalformTable = dynamoDbEnhancedAsyncClient
+                .table("digital_form", TableSchema.fromBean(DigitalForm.class));
+
+        DynamoDbAsyncIndex<DigitalForm> secIndex = digitalformTable
                         .index("statusAndCreatedAt");
 
-        AttributeValue attVal = AttributeValue.builder()
-                .s("IC#10200201202")
-                .build();
+//        AttributeValue attVal = AttributeValue.builder()
+//                .s("IC#10200201202")
+//                .build();
+//
+//        // Create a QueryConditional object that's used in the query operation
+//        QueryConditional queryConditional = QueryConditional
+//                .keyEqualTo(Key.builder().partitionValue(attVal)
+//                        .build());
+//
+//        // Get items in the DigitalForm table
+//        SdkPublisher<Page<DigitalForm>> results =  secIndex.query(
+//                QueryEnhancedRequest.builder()
+//                        .queryConditional(queryConditional)
+//                        .build());
 
-        // Create a QueryConditional object that's used in the query operation
-        QueryConditional queryConditional = QueryConditional
-                .keyEqualTo(Key.builder().partitionValue(attVal)
-                        .build());
-
-        // Get items in the DigitalForm table
-        SdkPublisher<Page<DigitalForm>> results =  secIndex.query(
-                QueryEnhancedRequest.builder()
-                        .queryConditional(queryConditional)
-                        .build());
+        SdkPublisher<Page<DigitalForm>> customersWithName =
+                secIndex.query(r -> r.queryConditional(
+                        keyEqualTo(k -> k.partitionValue("IC#102002012021"))));
 
         AtomicInteger atomicInteger = new AtomicInteger();
         atomicInteger.set(0);
 
-        results.subscribe(page -> {
+
+        customersWithName.subscribe(page -> {
             DigitalForm digitalForm = (DigitalForm) page.items().get(atomicInteger.get());
             System.out.println(digitalForm.getProducts());
             atomicInteger.incrementAndGet();
