@@ -26,6 +26,7 @@ public class DigitalFormDao {
     public String addressCountry;
     public Finance financeInfo;
 
+
     @DynamoDbPartitionKey
     @DynamoDbSecondaryPartitionKey(indexNames = "productsAndCreatedAt")
     @DynamoDbAttribute(value = "PK")

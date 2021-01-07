@@ -1,6 +1,8 @@
 package test.com.toblers.origination.digital.repositories;
 
 import com.toblers.origination.digital.OpenAPI2SpringBoot;
+import com.toblers.origination.digital.model.Address;
+import com.toblers.origination.digital.model.Customer;
 import com.toblers.origination.digital.model.DigitalForm;
 import com.toblers.origination.digital.model.Product;
 import com.toblers.origination.digital.repositories.DigitalFormRepository;
@@ -44,7 +46,7 @@ public class DigitalFormDaoRepositoryIntegrationTest {
     DigitalFormRepository repository;
 
     @Test
-    public void testRepoInsert() throws ExecutionException, InterruptedException {
+    public void testRepo() throws ExecutionException, InterruptedException {
         DigitalForm form = new DigitalForm();
         form.setFormId("ABC123");
         Product product = new Product();
@@ -54,8 +56,24 @@ public class DigitalFormDaoRepositoryIntegrationTest {
         form.setProduct(product);
         form.setStatus("IC");
 
-        repository.createDigitalForm(form);
+//        repository.createDigitalForm(form);
 
+        Customer customer = new Customer();
+        customer.setEmail("toblers@toblersEmail11.com");
+        customer.setFirstName("Toblers");
+        customer.setLastName("Luo");
+        customer.setMobileNumber("0434170000");
+        customer.setDateOfBirth("10101987");
+
+        Address address = new Address();
+        address.setCountry("AUS");
+        address.setDetail("888 Ashley Ave, Sydney");
+        address.setType("RA");
+        customer.addAddressesItem(address);
+
+        form.setCustomer(customer);
+
+        repository.updateDigitalForm(form);
     }
 
     @Test

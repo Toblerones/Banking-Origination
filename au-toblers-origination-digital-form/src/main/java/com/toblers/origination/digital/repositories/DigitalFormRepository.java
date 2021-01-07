@@ -46,16 +46,39 @@ public class DigitalFormRepository {
     }
 
     public void updateDigitalForm(DigitalForm digitalForm){
-
-        DigitalFormDao formDao = new DigitalFormDao();
-
-        formDao.setPk(String.format("%s#%s", "FORM", digitalForm.getFormId()));
-        formDao.setSk(String.format("%s#%s", "INFO", digitalForm.getFormId()));
-        formDao.setProducts(digitalForm.getProduct().getProductCodes().get(0));
-        formDao.setStatus(digitalForm.getStatus());
-//        formDao.setProductsCreatedAt(String.format("%s#%s", digitalForm.getStatus(), digitalForm.getFormId(), createdAt));
         try {
+            DigitalFormDao formDao = new DigitalFormDao();
+
+            // Form Item
+            formDao.setPk(String.format("%s#%s", "FORM", digitalForm.getFormId()));
+            formDao.setSk(String.format("%s#%s", "INFO", digitalForm.getFormId()));
+            formDao.setProducts(digitalForm.getProduct().getProductCodes().get(0));
+            formDao.setStatus(digitalForm.getStatus());
+
             digitalformTable.putItem(formDao).get();
+
+            // Applicant Item
+            formDao = new DigitalFormDao();
+            formDao.setPk(String.format("%s#%s", "FORM", digitalForm.getFormId()));
+            formDao.setSk(String.format("%s#%s", "APPLICANT", "a1"));
+            formDao.setFirstName(digitalForm.getCustomer().getFirstName());
+            formDao.setLastName(digitalForm.getCustomer().getLastName());
+            formDao.setMobile(digitalForm.getCustomer().getMobileNumber());
+            formDao.setEmail(digitalForm.getCustomer().getEmail());
+            formDao.setDob(digitalForm.getCustomer().getDateOfBirth());
+            digitalformTable.putItem(formDao).get();
+
+            // Address Item
+            formDao = new DigitalFormDao();
+            formDao.setPk(String.format("%s#%s", "ADDRESS", "x1"));
+            formDao.setSk(String.format("%s#%s", "APPLICANT", "a1"));
+            formDao.setAddressId("x1");
+            formDao.setApplicantId("a1");
+            formDao.setAddressType(digitalForm.getCustomer().getAddresses().get(0).getType());
+            formDao.setAddressDetail(digitalForm.getCustomer().getAddresses().get(0).getDetail());
+            formDao.setAddressCountry(digitalForm.getCustomer().getAddresses().get(0).getCountry());
+            digitalformTable.putItem(formDao).get();
+
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
