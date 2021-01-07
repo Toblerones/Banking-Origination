@@ -12,7 +12,7 @@ public class DigitalFormDao {
     public String status;
     public String products;
     public String createdAt;
-    public String statusCreatedAt;
+    public String productsCreatedAt;
     public String firstName;
     public String lastName;
     public String mobile;
@@ -27,7 +27,7 @@ public class DigitalFormDao {
     public Finance financeInfo;
 
     @DynamoDbPartitionKey
-    @DynamoDbSecondaryPartitionKey(indexNames = "statusAndCreatedAt")
+    @DynamoDbSecondaryPartitionKey(indexNames = "productsAndCreatedAt")
     @DynamoDbAttribute(value = "PK")
     public String getPk() {
         return pk;
@@ -74,14 +74,14 @@ public class DigitalFormDao {
         this.createdAt = createdAt;
     }
 
-    @DynamoDbSecondarySortKey(indexNames = "statusAndCreatedAt")
-    @DynamoDbAttribute(value = "statusCreatedAt")
-    public String getStatusCreatedAt() {
-        return statusCreatedAt;
+    @DynamoDbSecondarySortKey(indexNames = "productsAndCreatedAt")
+    @DynamoDbAttribute(value = "productsCreatedAt")
+    public String getProductsCreatedAt() {
+        return productsCreatedAt;
     }
 
-    public void setStatusCreatedAt(String statusCreatedAt) {
-        this.statusCreatedAt = statusCreatedAt;
+    public void setProductsCreatedAt(String productsCreatedAt) {
+        this.productsCreatedAt = productsCreatedAt;
     }
 
     @DynamoDbAttribute(value = "first_name")

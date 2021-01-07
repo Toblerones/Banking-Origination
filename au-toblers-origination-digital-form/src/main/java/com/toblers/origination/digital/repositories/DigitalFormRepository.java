@@ -33,7 +33,7 @@ public class DigitalFormRepository {
         formDao.setStatus(digitalForm.getStatus());
         String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("mmHHddmmyyyy"));
         formDao.setCreatedAt(createdAt);
-        formDao.setStatusCreatedAt(String.format("%s#%s", digitalForm.getStatus(), digitalForm.getFormId(), createdAt));
+        formDao.setProductsCreatedAt(String.format("%s#%s", digitalForm.getStatus(), digitalForm.getFormId(), createdAt));
         try {
             digitalformTable.putItem(formDao).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -46,15 +46,14 @@ public class DigitalFormRepository {
     }
 
     public void updateDigitalForm(DigitalForm digitalForm){
+
         DigitalFormDao formDao = new DigitalFormDao();
 
         formDao.setPk(String.format("%s#%s", "FORM", digitalForm.getFormId()));
         formDao.setSk(String.format("%s#%s", "INFO", digitalForm.getFormId()));
         formDao.setProducts(digitalForm.getProduct().getProductCodes().get(0));
         formDao.setStatus(digitalForm.getStatus());
-        String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("mmHHddmmyyyy"));
-        formDao.setCreatedAt(createdAt);
-        formDao.setStatusCreatedAt(String.format("%s#%s", digitalForm.getStatus(), digitalForm.getFormId(), createdAt));
+//        formDao.setProductsCreatedAt(String.format("%s#%s", digitalForm.getStatus(), digitalForm.getFormId(), createdAt));
         try {
             digitalformTable.putItem(formDao).get();
         } catch (InterruptedException | ExecutionException e) {

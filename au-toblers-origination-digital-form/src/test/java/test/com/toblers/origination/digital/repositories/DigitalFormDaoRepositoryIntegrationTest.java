@@ -68,7 +68,7 @@ public class DigitalFormDaoRepositoryIntegrationTest {
         form.setProducts("EGA");
         form.setStatus("IC");
         form.setCreatedAt("102002012021");
-        form.setStatusCreatedAt("IC#102002012021");
+        form.setProductsCreatedAt("EGA#102002012021");
 
         DigitalFormDao.Finance finance = new DigitalFormDao.Finance();
         finance.setCredit(BigDecimal.valueOf(1000));
@@ -85,11 +85,11 @@ public class DigitalFormDaoRepositoryIntegrationTest {
                 .table("digital_form", TableSchema.fromBean(DigitalFormDao.class));
 
         DynamoDbAsyncIndex<DigitalFormDao> secIndex = digitalformTable
-                        .index("statusAndCreatedAt");
+                        .index("productsAndCreatedAt");
 
         SdkPublisher<Page<DigitalFormDao>> customersWithName =
                 secIndex.query(r -> r.queryConditional(
-                        keyEqualTo(k -> k.partitionValue("FORM#ABC123").sortValue("IC#102002012021"))));
+                        keyEqualTo(k -> k.partitionValue("FORM#ABC123").sortValue("EGA#102002012021"))));
 
         AtomicInteger atomicInteger = new AtomicInteger();
         atomicInteger.set(0);

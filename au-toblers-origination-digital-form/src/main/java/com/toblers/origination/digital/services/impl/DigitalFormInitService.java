@@ -27,11 +27,13 @@ public class DigitalFormInitService implements DigitalFormService {
             digitalForm.setFormId(formId);
 
             digitalForm.setStatus(ServiceConstants.FORM_STATUS_INITIAL);
+            digitalFormRepository.createDigitalForm(digitalForm);
         } else {
             digitalForm.setStatus(ServiceConstants.FORM_STATUS_IN_PROGRESS);
+            digitalFormRepository.updateDigitalForm(digitalForm);
         }
 
-        digitalFormRepository.createDigitalForm(digitalForm);
-        return false;
+
+        return true;
     }
 }
