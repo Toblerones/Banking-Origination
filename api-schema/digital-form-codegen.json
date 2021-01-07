@@ -4,7 +4,7 @@
   "artifactVersion":"1.0.0",
   "basePackage": "com.toblers.origination.digital",
   "apiPackage": "com.toblers.origination.digital.controller",
-  "modelPackage" : "com.toblers.origination.digital.domain",
+  "modelPackage" : "com.toblers.origination.digital.model",
   "configPackage" : "com.toblers.origination.digital.config",
   "library":"spring-boot"
 }

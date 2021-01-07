@@ -4,7 +4,7 @@
   "artifactVersion":"1.0.0",
   "basePackage": "com.toblers.digital.security.platform",
   "apiPackage": "com.toblers.digital.security.platform.controller",
-  "modelPackage" : "com.toblers.digital.security.platform.domain",
+  "modelPackage" : "com.toblers.digital.security.platform.model",
   "configPackage" : "com.toblers.digital.security.platform.config",
   "library":"spring-boot"
 }

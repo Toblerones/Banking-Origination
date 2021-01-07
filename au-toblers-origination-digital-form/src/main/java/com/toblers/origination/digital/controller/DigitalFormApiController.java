@@ -1,6 +1,6 @@
 package com.toblers.origination.digital.controller;
 
-import com.toblers.origination.digital.domain.DigitalForm;
+import com.toblers.origination.digital.model.DigitalForm;
 import com.toblers.origination.digital.services.DigitalFormServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ public class DigitalFormApiController implements DigitalFormApi {
     @Override
     public ResponseEntity<Void> digitalFormPost(String xRequestID, String xSessionID, String xChannelID, @Valid DigitalForm digitalForm) {
 
-        factory.getService(digitalForm.getStatus()).handleDigitalForm();
+        factory.getService(digitalForm.getStatus()).handleDigitalForm(digitalForm);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -1,15 +1,10 @@
-package com.toblers.origination.digital.domain;
+package com.toblers.origination.digital.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.toblers.origination.digital.domain.Customer;
-import com.toblers.origination.digital.domain.Product;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.openapitools.jackson.nullable.JsonNullable;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * DigitalForm
