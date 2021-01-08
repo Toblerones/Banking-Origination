@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.keyEqualTo;
+import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.sortBeginsWith;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = OpenAPI2SpringBoot.class)
@@ -104,7 +105,7 @@ public class DigitalFormDaoRepositoryIntegrationTest {
         DigitalFormDao form = digitalformTable.getItem(
                 Key.builder().partitionValue("FORM#ABC123").sortValue("INFO#ABC123").build()).get();
 
-        System.out.println(form.toString());
+        System.out.println(form.getSk());
     }
 
     @Test
@@ -113,11 +114,13 @@ public class DigitalFormDaoRepositoryIntegrationTest {
                 .table("digital_form", TableSchema.fromBean(DigitalFormDao.class));
 
 
-        SdkPublisher<Page<DigitalFormDao>> digitalForms = digitalformTable.query(r -> r.queryConditional(
-                keyEqualTo(k -> k.partitionValue("FORM#ABC123"))));
+        PagePublisher<DigitalFormDao> digitalForms = digitalformTable.query(
+                r -> r.queryConditional(
+                    sortBeginsWith(k -> k.partitionValue("FORM#ABC123").sortValue("INFO"))));
 
         AtomicInteger atomicInteger = new AtomicInteger();
         atomicInteger.set(0);
+
         digitalForms.subscribe(page -> {
             DigitalFormDao digitalFormDao = (DigitalFormDao) page.items().get(atomicInteger.get());
             System.out.println(digitalFormDao.getSk());
