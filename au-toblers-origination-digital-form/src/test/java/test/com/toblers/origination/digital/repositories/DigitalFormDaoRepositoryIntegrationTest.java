@@ -98,7 +98,7 @@ public class DigitalFormDaoRepositoryIntegrationTest {
     }
 
     @Test
-    public void testFindInfoByPKSK() throws ExecutionException, InterruptedException {
+    public void testGetItemWithPKSK() throws ExecutionException, InterruptedException {
         DynamoDbAsyncTable<DigitalFormDao> digitalformTable = dynamoDbEnhancedAsyncClient
                 .table("digital_form", TableSchema.fromBean(DigitalFormDao.class));
 
@@ -109,7 +109,7 @@ public class DigitalFormDaoRepositoryIntegrationTest {
     }
 
     @Test
-    public void testQueryWithPKonly(){
+    public void testQueryWithPKandSKBegin(){
         DynamoDbAsyncTable<DigitalFormDao> digitalformTable = dynamoDbEnhancedAsyncClient
                 .table("digital_form", TableSchema.fromBean(DigitalFormDao.class));
 
