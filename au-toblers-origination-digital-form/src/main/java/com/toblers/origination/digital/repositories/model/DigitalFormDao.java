@@ -6,6 +6,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 import java.math.BigDecimal;
 
 @DynamoDbBean
+
 public class DigitalFormDao {
 
     private String pk;

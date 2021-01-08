@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbAsyncTable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedAsyncClient;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.model.UpdateItemEnhancedRequest;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 @Service
 public class DigitalFormRepository {
@@ -52,42 +54,43 @@ public class DigitalFormRepository {
 
     public void updateDigitalForm(DigitalForm digitalForm){
         try {
-            DigitalFormDao formDao = new DigitalFormDao();
+            final DigitalFormDao formDao = new DigitalFormDao();
 
             // Form Item
             formDao.setPk(String.format("%s#%s", "FORM", digitalForm.getFormId()));
             formDao.setSk(String.format("%s#%s", "INFO", digitalForm.getFormId()));
             formDao.setProducts(digitalForm.getProduct().getProductCodes().get(0));
             formDao.setStatus(digitalForm.getStatus());
-            digitalformTable.updateItem(formDao).get();
+
+            digitalformTable.updateItem(request -> request.item(formDao).ignoreNulls(true)).get();
 
             // Applicant Item
             for (Customer customer : digitalForm.getCustomer()) {
-                formDao = new DigitalFormDao();
+                final DigitalFormDao applicantDao = new DigitalFormDao();
                 String primaryKey = String.format("%s#%s", "FORM", digitalForm.getFormId());
                 String sortKey = String.format("%s#%s#%s", "APPLICANT", customer.getIndex(), digitalForm.getFormId());
 
-                formDao.setPk(primaryKey);
-                formDao.setSk(sortKey);
-                formDao.setFirstName(customer.getFirstName());
-                formDao.setLastName(customer.getLastName());
-                formDao.setMobile(customer.getMobileNumber());
-                formDao.setEmail(customer.getEmail());
-                formDao.setDob(customer.getDateOfBirth());
-                digitalformTable.updateItem(formDao).get();
+                applicantDao.setPk(primaryKey);
+                applicantDao.setSk(sortKey);
+                applicantDao.setFirstName(customer.getFirstName());
+                applicantDao.setLastName(customer.getLastName());
+                applicantDao.setMobile(customer.getMobileNumber());
+                applicantDao.setEmail(customer.getEmail());
+                applicantDao.setDob(customer.getDateOfBirth());
+                digitalformTable.updateItem(request -> request.item(applicantDao).ignoreNulls(true)).get();
 
                 // Address Item
                 for(Address address : customer.getAddresses()) {
-                    formDao = new DigitalFormDao();
+                    final DigitalFormDao addressDao = new DigitalFormDao();
                     String addressId = UUID.randomUUID().toString();
-                    formDao.setPk(String.format("%s#%s", "ADDRESS", addressId));
-                    formDao.setSk(sortKey);
-                    formDao.setAddressId(addressId);
-                    formDao.setApplicantId(String.format("%s#%s", customer.getIndex(), digitalForm.getFormId()));
-                    formDao.setAddressType(address.getType());
-                    formDao.setAddressDetail(address.getDetail());
-                    formDao.setAddressCountry(address.getCountry());
-                    digitalformTable.updateItem(formDao).get();
+                    addressDao.setPk(String.format("%s#%s", "ADDRESS", addressId));
+                    addressDao.setSk(sortKey);
+                    addressDao.setAddressId(addressId);
+                    addressDao.setApplicantId(String.format("%s#%s", customer.getIndex(), digitalForm.getFormId()));
+                    addressDao.setAddressType(address.getType());
+                    addressDao.setAddressDetail(address.getDetail());
+                    addressDao.setAddressCountry(address.getCountry());
+                    digitalformTable.updateItem(request -> request.item(addressDao).ignoreNulls(true)).get();
                 }
             }
         } catch (InterruptedException | ExecutionException e) {
