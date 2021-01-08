@@ -1,0 +1,112 @@
+{
+  "ModelName": "Digital_Form",
+  "ModelMetadata": {
+    "Author": "",
+    "DateCreated": "Dec 31, 2020, 02:55 PM",
+    "DateLastModified": "Jan 07, 2021, 03:46 PM",
+    "Description": "",
+    "Version": "1.0"
+  },
+  "DataModel": [
+    {
+      "TableName": "digital_form",
+      "KeyAttributes": {
+        "PartitionKey": {
+          "AttributeName": "PK",
+          "AttributeType": "S"
+        },
+        "SortKey": {
+          "AttributeName": "SK",
+          "AttributeType": "S"
+        }
+      },
+      "NonKeyAttributes": [
+        {
+          "AttributeName": "products",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "status",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "createdAt",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "productsCreatedAt",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "first_name",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "last_name",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "mobile",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "email",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "date_of_birth",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "form_id",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "applicant_id",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "address_id",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "address_type",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "address_detail",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "address_country",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "finance_info",
+          "AttributeType": "M"
+        }
+      ],
+      "GlobalSecondaryIndexes": [
+        {
+          "IndexName": "productsAndCreatedAt",
+          "KeyAttributes": {
+            "PartitionKey": {
+              "AttributeName": "PK",
+              "AttributeType": "S"
+            },
+            "SortKey": {
+              "AttributeName": "productsCreatedAt",
+              "AttributeType": "S"
+            }
+          },
+          "Projection": {
+            "ProjectionType": "ALL"
+          }
+        }
+      ],
+      "DataAccess": {
+        "MySql": {}
+      }
+    }
+  ]
+}

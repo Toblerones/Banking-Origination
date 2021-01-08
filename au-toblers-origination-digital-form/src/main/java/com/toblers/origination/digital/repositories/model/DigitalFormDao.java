@@ -1,5 +1,6 @@
 package com.toblers.origination.digital.repositories.model;
 
+import software.amazon.awssdk.enhanced.dynamodb.mapper.UpdateBehavior;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 import java.math.BigDecimal;
@@ -67,6 +68,7 @@ public class DigitalFormDao {
     }
 
     @DynamoDbAttribute(value = "createdAt")
+    @DynamoDbUpdateBehavior(UpdateBehavior.WRITE_IF_NOT_EXISTS)
     public String getCreatedAt() {
         return createdAt;
     }
@@ -76,6 +78,7 @@ public class DigitalFormDao {
     }
 
     @DynamoDbSecondarySortKey(indexNames = "productsAndCreatedAt")
+    @DynamoDbUpdateBehavior(UpdateBehavior.WRITE_IF_NOT_EXISTS)
     @DynamoDbAttribute(value = "productsCreatedAt")
     public String getProductsCreatedAt() {
         return productsCreatedAt;

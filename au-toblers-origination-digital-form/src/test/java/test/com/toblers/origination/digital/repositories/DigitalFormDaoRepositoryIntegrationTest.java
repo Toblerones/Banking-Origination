@@ -15,11 +15,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import software.amazon.awssdk.core.async.SdkPublisher;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbAsyncIndex;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbAsyncTable;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedAsyncClient;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
+import software.amazon.awssdk.enhanced.dynamodb.model.PagePublisher;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -56,9 +54,10 @@ public class DigitalFormDaoRepositoryIntegrationTest {
         form.setProduct(product);
         form.setStatus("IC");
 
-//        repository.createDigitalForm(form);
+        repository.createDigitalForm(form);
 
         Customer customer = new Customer();
+        customer.setIndex(1);
         customer.setEmail("toblers@toblersEmail11.com");
         customer.setFirstName("Toblers");
         customer.setLastName("Luo");
@@ -71,7 +70,7 @@ public class DigitalFormDaoRepositoryIntegrationTest {
         address.setType("RA");
         customer.addAddressesItem(address);
 
-        form.setCustomer(customer);
+        form.addCustomerItem(customer);
 
         repository.updateDigitalForm(form);
     }
@@ -95,6 +94,35 @@ public class DigitalFormDaoRepositoryIntegrationTest {
 
         form.setFinanceInfo(finance);
         digitalformTable.putItem(form).get();
+    }
+
+    @Test
+    public void testFindInfoByPKSK() throws ExecutionException, InterruptedException {
+        DynamoDbAsyncTable<DigitalFormDao> digitalformTable = dynamoDbEnhancedAsyncClient
+                .table("digital_form", TableSchema.fromBean(DigitalFormDao.class));
+
+        DigitalFormDao form = digitalformTable.getItem(
+                Key.builder().partitionValue("FORM#ABC123").sortValue("INFO#ABC123").build()).get();
+
+        System.out.println(form.toString());
+    }
+
+    @Test
+    public void testQueryWithPKonly(){
+        DynamoDbAsyncTable<DigitalFormDao> digitalformTable = dynamoDbEnhancedAsyncClient
+                .table("digital_form", TableSchema.fromBean(DigitalFormDao.class));
+
+
+        SdkPublisher<Page<DigitalFormDao>> digitalForms = digitalformTable.query(r -> r.queryConditional(
+                keyEqualTo(k -> k.partitionValue("FORM#ABC123").sortValue("INFO#ABC123"))));
+
+        AtomicInteger atomicInteger = new AtomicInteger();
+        atomicInteger.set(0);
+        digitalForms.subscribe(page -> {
+            DigitalFormDao digitalFormDao = (DigitalFormDao) page.items().get(atomicInteger.get());
+            System.out.println(digitalFormDao.getSk());
+            atomicInteger.incrementAndGet();
+        });
     }
 
     @Test

@@ -21,8 +21,8 @@ public class DigitalFormInitService implements DigitalFormService {
     public boolean handleDigitalForm(DigitalForm digitalForm) {
 
         if(StringUtils.isEmpty(digitalForm.getFormId())){
-            String formId = digitalForm.getCustomer().getFirstName().substring(0,1) +
-                    digitalForm.getCustomer().getLastName().substring(0,1) +
+            String formId = digitalForm.getCustomer().get(0).getFirstName().substring(0,1) +
+                    digitalForm.getCustomer().get(0).getLastName().substring(0,1) +
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("mmHHddmmyyyy"));
             digitalForm.setFormId(formId);
 
