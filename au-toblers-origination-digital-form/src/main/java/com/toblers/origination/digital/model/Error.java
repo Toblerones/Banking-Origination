@@ -2,14 +2,17 @@ package com.toblers.origination.digital.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
+import org.openapitools.jackson.nullable.JsonNullable;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * Error
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-12-30T15:18:13.367822+11:00[Australia/Sydney]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-01-08T21:47:42.983937+11:00[Australia/Sydney]")
 
 public class Error   {
   @JsonProperty("code")

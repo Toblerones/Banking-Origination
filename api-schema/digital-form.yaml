@@ -152,7 +152,9 @@ components:
           type: string
           description: digital form number
         customer:
-          $ref: '#/components/schemas/Customer'
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
         product:
           $ref: '#/components/schemas/Product'
         status:
@@ -161,6 +163,9 @@ components:
       title: Customer Info
       type: object
       properties:
+        index:
+          type: integer
+          description: index of customer
         firstName:
           type: string
           description: first name

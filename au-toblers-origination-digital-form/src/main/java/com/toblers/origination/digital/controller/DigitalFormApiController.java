@@ -11,7 +11,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.Valid;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-12-30T15:18:13.367822+11:00[Australia/Sydney]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-01-08T21:47:42.983937+11:00[Australia/Sydney]")
 
 @Controller
 @RequestMapping("${openapi.bankingOrigination.base-path:/api}")

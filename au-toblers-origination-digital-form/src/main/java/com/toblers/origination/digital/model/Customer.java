@@ -2,17 +2,25 @@ package com.toblers.origination.digital.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.toblers.origination.digital.model.Address;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
+import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Customer
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-12-30T15:18:13.367822+11:00[Australia/Sydney]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-01-08T21:47:42.983937+11:00[Australia/Sydney]")
 
 public class Customer   {
+  @JsonProperty("index")
+  private Integer index;
+
   @JsonProperty("firstName")
   private String firstName;
 
@@ -31,6 +39,26 @@ public class Customer   {
   @JsonProperty("Addresses")
   @Valid
   private List<Address> addresses = null;
+
+  public Customer index(Integer index) {
+    this.index = index;
+    return this;
+  }
+
+  /**
+   * index of customer
+   * @return index
+  */
+  @ApiModelProperty(value = "index of customer")
+
+
+  public Integer getIndex() {
+    return index;
+  }
+
+  public void setIndex(Integer index) {
+    this.index = index;
+  }
 
   public Customer firstName(String firstName) {
     this.firstName = firstName;
@@ -171,7 +199,8 @@ public class Customer   {
       return false;
     }
     Customer customer = (Customer) o;
-    return Objects.equals(this.firstName, customer.firstName) &&
+    return Objects.equals(this.index, customer.index) &&
+        Objects.equals(this.firstName, customer.firstName) &&
         Objects.equals(this.lastName, customer.lastName) &&
         Objects.equals(this.dateOfBirth, customer.dateOfBirth) &&
         Objects.equals(this.mobileNumber, customer.mobileNumber) &&
@@ -181,7 +210,7 @@ public class Customer   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(firstName, lastName, dateOfBirth, mobileNumber, email, addresses);
+    return Objects.hash(index, firstName, lastName, dateOfBirth, mobileNumber, email, addresses);
   }
 
   @Override
@@ -189,6 +218,7 @@ public class Customer   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Customer {\n");
     
+    sb.append("    index: ").append(toIndentedString(index)).append("\n");
     sb.append("    firstName: ").append(toIndentedString(firstName)).append("\n");
     sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");

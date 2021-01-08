@@ -2,21 +2,29 @@ package com.toblers.origination.digital.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.toblers.origination.digital.model.Customer;
+import com.toblers.origination.digital.model.Product;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
+import java.util.ArrayList;
+import java.util.List;
+import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * DigitalForm
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-12-30T15:18:13.367822+11:00[Australia/Sydney]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-01-08T21:47:42.983937+11:00[Australia/Sydney]")
 
 public class DigitalForm   {
   @JsonProperty("formId")
   private String formId;
 
   @JsonProperty("customer")
-  private Customer customer;
+  @Valid
+  private List<Customer> customer = null;
 
   @JsonProperty("product")
   private Product product;
@@ -44,8 +52,16 @@ public class DigitalForm   {
     this.formId = formId;
   }
 
-  public DigitalForm customer(Customer customer) {
+  public DigitalForm customer(List<Customer> customer) {
     this.customer = customer;
+    return this;
+  }
+
+  public DigitalForm addCustomerItem(Customer customerItem) {
+    if (this.customer == null) {
+      this.customer = new ArrayList<>();
+    }
+    this.customer.add(customerItem);
     return this;
   }
 
@@ -57,11 +73,11 @@ public class DigitalForm   {
 
   @Valid
 
-  public Customer getCustomer() {
+  public List<Customer> getCustomer() {
     return customer;
   }
 
-  public void setCustomer(Customer customer) {
+  public void setCustomer(List<Customer> customer) {
     this.customer = customer;
   }
 
