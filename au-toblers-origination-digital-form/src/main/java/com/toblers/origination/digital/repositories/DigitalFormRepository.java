@@ -83,7 +83,7 @@ public class DigitalFormRepository {
                 for(Address address : customer.getAddresses()) {
                     final DigitalFormDao addressDao = new DigitalFormDao();
                     String addressId = UUID.randomUUID().toString();
-                    addressDao.setPk(String.format("%s#%s", "ADDRESS", addressId));
+                    addressDao.setPk(String.format("%s#%s#%s", "ADDRESS", address.getType(), addressId));
                     addressDao.setSk(sortKey);
                     addressDao.setAddressId(addressId);
                     addressDao.setApplicantId(String.format("%s#%s", customer.getIndex(), digitalForm.getFormId()));
