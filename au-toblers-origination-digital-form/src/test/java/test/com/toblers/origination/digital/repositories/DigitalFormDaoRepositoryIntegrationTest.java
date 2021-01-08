@@ -114,7 +114,7 @@ public class DigitalFormDaoRepositoryIntegrationTest {
 
 
         SdkPublisher<Page<DigitalFormDao>> digitalForms = digitalformTable.query(r -> r.queryConditional(
-                keyEqualTo(k -> k.partitionValue("FORM#ABC123").sortValue("INFO#ABC123"))));
+                keyEqualTo(k -> k.partitionValue("FORM#ABC123"))));
 
         AtomicInteger atomicInteger = new AtomicInteger();
         atomicInteger.set(0);
