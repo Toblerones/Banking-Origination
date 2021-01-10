@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import software.amazon.awssdk.core.async.SdkPublisher;
+import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
@@ -156,7 +157,7 @@ public class DigitalFormDaoRepositoryIntegrationTest {
     }
 
     @Test
-    public void testFindByInvertedIndex() throws ExecutionException, InterruptedException {
+    public void testFindByInvertedIndex_async() throws ExecutionException, InterruptedException {
         DynamoDbAsyncTable<DigitalFormDao> digitalformTable = dynamoDbEnhancedAsyncClient
                 .table("digital_form", TableSchema.fromBean(DigitalFormDao.class));
 
@@ -182,4 +183,28 @@ public class DigitalFormDaoRepositoryIntegrationTest {
         }).get();
     }
 
+    @Test
+    public void testFindByInvertedIndex_sync() throws ExecutionException, InterruptedException {
+        DynamoDbTable<DigitalFormDao> digitalformTable = dynamoDbEnhancedClient
+                .table("digital_form", TableSchema.fromBean(DigitalFormDao.class));
+
+        DynamoDbIndex<DigitalFormDao> invertedIndex = digitalformTable
+                .index("invertedIndex");
+
+        SdkIterable<Page<DigitalFormDao>> digitalForms = invertedIndex.query(
+                r -> r.queryConditional(
+                        sortBeginsWith(k -> k.partitionValue("INFO#ABC123").sortValue("FORM"))));
+
+        AtomicInteger atomicInteger = new AtomicInteger();
+        atomicInteger.set(0);
+
+
+        List<DigitalFormDao> daoList = digitalForms.stream().findFirst().get().items();
+        if (daoList.isEmpty()) {
+            System.out.println("no record found");
+        } else {
+            System.out.println(daoList.get(0).getProducts());
+        }
+
+    }
 }
