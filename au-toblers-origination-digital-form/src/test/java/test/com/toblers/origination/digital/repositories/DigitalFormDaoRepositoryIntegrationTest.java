@@ -17,7 +17,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import software.amazon.awssdk.core.async.SdkPublisher;
 import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
+import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
 import software.amazon.awssdk.enhanced.dynamodb.model.PagePublisher;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
+import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -25,8 +28,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.keyEqualTo;
-import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.sortBeginsWith;
+import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = OpenAPI2SpringBoot.class)
@@ -40,6 +42,9 @@ public class DigitalFormDaoRepositoryIntegrationTest {
 
     @Autowired
     DynamoDbEnhancedAsyncClient dynamoDbEnhancedAsyncClient;
+
+    @Autowired
+    DynamoDbEnhancedClient dynamoDbEnhancedClient;
 
     @Autowired
     DigitalFormRepository repository;
@@ -109,24 +114,23 @@ public class DigitalFormDaoRepositoryIntegrationTest {
     }
 
     @Test
-    public void testQueryWithPKandSKBegin(){
+    public void testQueryWithPKandSKBegin() throws ExecutionException, InterruptedException {
         DynamoDbAsyncTable<DigitalFormDao> digitalformTable = dynamoDbEnhancedAsyncClient
                 .table("digital_form", TableSchema.fromBean(DigitalFormDao.class));
 
-
         PagePublisher<DigitalFormDao> digitalForms = digitalformTable.query(
                 r -> r.queryConditional(
-                    sortBeginsWith(k -> k.partitionValue("FORM#ABC123").sortValue("INFO"))));
+                        sortBeginsWith(k -> k.partitionValue("FORM#ABC123").sortValue("INFO"))));
 
         AtomicInteger atomicInteger = new AtomicInteger();
         atomicInteger.set(0);
 
-        digitalForms.subscribe(page -> {
-            DigitalFormDao digitalFormDao = (DigitalFormDao) page.items().get(atomicInteger.get());
-            System.out.println(digitalFormDao.getSk());
+        digitalForms.items().subscribe(item -> {
+            System.out.println(item.getSk());
             atomicInteger.incrementAndGet();
-        });
+        }).get();
     }
+
 
     @Test
     public void testFindByGSi() throws ExecutionException, InterruptedException {
