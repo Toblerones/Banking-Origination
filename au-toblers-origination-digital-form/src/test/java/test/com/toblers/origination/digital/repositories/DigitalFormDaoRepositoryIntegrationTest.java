@@ -73,7 +73,7 @@ public class DigitalFormDaoRepositoryIntegrationTest {
 
         Address address = new Address();
         address.setCountry("AUS");
-        address.setDetail("888 Ashley Ave, Sydney");
+        address.setDetail("999 Ashley Ave, Sydney");
         address.setType("RA");
         customer.addAddressesItem(address);
 
