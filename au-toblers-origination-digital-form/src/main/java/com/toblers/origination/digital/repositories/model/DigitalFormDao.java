@@ -31,6 +31,7 @@ public class DigitalFormDao {
 
     @DynamoDbPartitionKey
     @DynamoDbSecondaryPartitionKey(indexNames = "productsAndCreatedAt")
+    @DynamoDbSecondarySortKey(indexNames = "invertedIndex")
     @DynamoDbAttribute(value = "PK")
     public String getPk() {
         return pk;
@@ -41,6 +42,7 @@ public class DigitalFormDao {
     }
 
     @DynamoDbSortKey
+    @DynamoDbSecondaryPartitionKey(indexNames = "invertedIndex")
     @DynamoDbAttribute(value = "SK")
     public String getSk() {
         return sk;

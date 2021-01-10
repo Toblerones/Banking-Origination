@@ -81,6 +81,7 @@ public class DigitalFormRepository {
 
                 // Address Item
                 for(Address address : customer.getAddresses()) {
+
                     final DigitalFormDao addressDao = new DigitalFormDao();
                     String addressId = UUID.randomUUID().toString();
                     addressDao.setPk(String.format("%s#%s#%s", "ADDRESS", address.getType(), addressId));

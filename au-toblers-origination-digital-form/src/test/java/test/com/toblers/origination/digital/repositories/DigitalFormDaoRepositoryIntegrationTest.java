@@ -154,4 +154,32 @@ public class DigitalFormDaoRepositoryIntegrationTest {
             atomicInteger.incrementAndGet();
         }).get();
     }
+
+    @Test
+    public void testFindByInvertedIndex() throws ExecutionException, InterruptedException {
+        DynamoDbAsyncTable<DigitalFormDao> digitalformTable = dynamoDbEnhancedAsyncClient
+                .table("digital_form", TableSchema.fromBean(DigitalFormDao.class));
+
+        DynamoDbAsyncIndex<DigitalFormDao> invertedIndex = digitalformTable
+                .index("invertedIndex");
+
+        SdkPublisher<Page<DigitalFormDao>> digitalForms = invertedIndex.query(
+                r -> r.queryConditional(
+                        sortBeginsWith(k -> k.partitionValue("INFO#ABC123").sortValue("FORM"))));
+
+        AtomicInteger atomicInteger = new AtomicInteger();
+        atomicInteger.set(0);
+
+        digitalForms.subscribe(page -> {
+            if (page.items().isEmpty()){
+                System.out.println("no data found");
+            } else {
+                DigitalFormDao digitalFormDao = (DigitalFormDao) page.items().get(atomicInteger.get());
+                System.out.println(digitalFormDao.getProducts());
+                DigitalFormDao.Finance finance = digitalFormDao.getFinanceInfo();
+                atomicInteger.incrementAndGet();
+            }
+        }).get();
+    }
+
 }
