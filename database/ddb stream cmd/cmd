@@ -1,0 +1,15 @@
+-- Enable DDB stream
+aws dynamodb update-table --table-name 'digital_form' --stream-specification StreamEnabled=true,streamViewType=NEW_IMAGE
+
+This one will generate ARN for next step.
+
+Reference:
+https://docs.aws.amazon.com/cli/latest/reference/dynamodbstreams/index.html
+
+
+Step 1 : Get shard iterator
+aws dynamodbstreams get-shard-iterator --stream-arn arn:aws:dynamodb:ddblocal:000000000000:table/digital_form/stream/2021-01-10T05:13:58.423 --shard-id hardId-00000001610255638431-6a5845c9 --endpoint-url http://localhost:8000
+
+
+Step 2: Get latest record by shar iterator
+aws dynamodbstreams get-records --shard-iterator "000|arn:aws:dynamodb:ddblocal:000000000000:table/digital_form/stream/2021-01-10T05:13:58.423|c2hhcmRJZC0wMDAwMDAwMTYxMDI1NTYzODQzMS02YTU4NDVjOXwwMDAwMDAwMDAwMDAwMDAwMDAwMTF8MDAwMDAwMDAwMDAwMDAwMDAxNjEwMjU2NDUzNzAx" --endpoint-url http://localhost:8000
