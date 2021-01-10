@@ -3,9 +3,10 @@
   "ModelMetadata": {
     "Author": "",
     "DateCreated": "Dec 31, 2020, 02:55 PM",
-    "DateLastModified": "Jan 07, 2021, 03:46 PM",
+    "DateLastModified": "Jan 10, 2021, 03:46 PM",
     "Description": "",
-    "Version": "1.0"
+    "Version": "2.0",
+    "AWSService": "Amazon DynamoDB"
   },
   "DataModel": [
     {
@@ -96,6 +97,22 @@
             },
             "SortKey": {
               "AttributeName": "productsCreatedAt",
+              "AttributeType": "S"
+            }
+          },
+          "Projection": {
+            "ProjectionType": "ALL"
+          }
+        },
+        {
+          "IndexName": "invertedIndex",
+          "KeyAttributes": {
+            "PartitionKey": {
+              "AttributeName": "SK",
+              "AttributeType": "S"
+            },
+            "SortKey": {
+              "AttributeName": "PK",
               "AttributeType": "S"
             }
           },
