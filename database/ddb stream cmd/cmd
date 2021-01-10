@@ -13,3 +13,67 @@ aws dynamodbstreams get-shard-iterator --stream-arn arn:aws:dynamodb:ddblocal:00
 
 Step 2: Get latest record by shar iterator
 aws dynamodbstreams get-records --shard-iterator "000|arn:aws:dynamodb:ddblocal:000000000000:table/digital_form/stream/2021-01-10T05:13:58.423|c2hhcmRJZC0wMDAwMDAwMTYxMDI1NTYzODQzMS02YTU4NDVjOXwwMDAwMDAwMDAwMDAwMDAwMDAwMTF8MDAwMDAwMDAwMDAwMDAwMDAxNjEwMjU2NDUzNzAx" --endpoint-url http://localhost:8000
+
+
+sample
+
+aws dynamodbstreams get-records --shard-iterator "000|arn:aws:dynamodb:ddblocal:000000000000:table/digital_form/stream/2021-01-10T05:13:58.423|c2hhcmRJZC0wMDAwMDAwMTYxMDI1NTYzODQzMS02YTU4NDVjOXwwMDAwMDAwMDAwMDAwMDAwMDAwMTF8MDAwMDAwMDAwMDAwMDAwMDAxNjEwMjU2NTQ1MTg1" --endpoint-url http://localhost:8000
+{
+    "Records": [
+        {
+            "eventID": "a2bf4249-e795-48ad-9a5b-6cbc8eec40fc",
+            "eventVersion": "1.1",
+            "dynamodb": {
+                "SequenceNumber": "000000000000000000011",
+                "Keys": {
+                    "SK": {
+                        "S": "INFO#ABC123"
+                    },
+                    "PK": {
+                        "S": "FORM#ABC1999"
+                    }
+                },
+                "SizeBytes": 171,
+                "NewImage": {
+                    "status": {
+                        "S": "IC"
+                    },
+                    "productsCreatedAt": {
+                        "S": "EGA#102002012021"
+                    },
+                    "SK": {
+                        "S": "INFO#ABC123"
+                    },
+                    "products": {
+                        "S": "EGA"
+                    },
+                    "PK": {
+                        "S": "FORM#ABC1999"
+                    },
+                    "finance_info": {
+                        "M": {
+                            "credit": {
+                                "N": "1000"
+                            },
+                            "mortgage": {
+                                "N": "1000000"
+                            },
+                            "income": {
+                                "N": "200000"
+                            }
+                        }
+                    },
+                    "createdAt": {
+                        "S": "102002012021"
+                    }
+                },
+                "ApproximateCreationDateTime": 1610256600.0,
+                "StreamViewType": "NEW_IMAGE"
+            },
+            "awsRegion": "ddblocal",
+            "eventName": "INSERT",
+            "eventSource": "aws:dynamodb"
+        }
+    ],
+    "NextShardIterator": "000|arn:aws:dynamodb:ddblocal:000000000000:table/digital_form/stream/2021-01-10T05:13:58.423|c2hhcmRJZC0wMDAwMDAwMTYxMDI1NTYzODQzMS02YTU4NDVjOXwwMDAwMDAwMDAwMDAwMDAwMDAwMTJ8MDAwMDAwMDAwMDAwMDAwMDAxNjEwMjU2NjMwODE0"
+}
