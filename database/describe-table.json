@@ -1,0 +1,91 @@
+{
+    "Table": {
+        "TableArn": "arn:aws:dynamodb:ddblocal:000000000000:table/digital_form", 
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "PK", 
+                "AttributeType": "S"
+            }, 
+            {
+                "AttributeName": "SK", 
+                "AttributeType": "S"
+            }, 
+            {
+                "AttributeName": "productsCreatedAt", 
+                "AttributeType": "S"
+            }
+        ], 
+        "GlobalSecondaryIndexes": [
+            {
+                "IndexSizeBytes": 425, 
+                "IndexName": "invertedIndex", 
+                "Projection": {
+                    "ProjectionType": "ALL"
+                }, 
+                "ProvisionedThroughput": {
+                    "WriteCapacityUnits": 5, 
+                    "ReadCapacityUnits": 5
+                }, 
+                "IndexStatus": "ACTIVE", 
+                "KeySchema": [
+                    {
+                        "KeyType": "HASH", 
+                        "AttributeName": "SK"
+                    }, 
+                    {
+                        "KeyType": "RANGE", 
+                        "AttributeName": "PK"
+                    }
+                ], 
+                "IndexArn": "arn:aws:dynamodb:ddblocal:000000000000:table/digital_form/index/invertedIndex", 
+                "ItemCount": 3
+            }, 
+            {
+                "IndexSizeBytes": 425, 
+                "IndexName": "productsAndCreatedAt", 
+                "Projection": {
+                    "ProjectionType": "ALL"
+                }, 
+                "ProvisionedThroughput": {
+                    "WriteCapacityUnits": 5, 
+                    "ReadCapacityUnits": 5
+                }, 
+                "IndexStatus": "ACTIVE", 
+                "KeySchema": [
+                    {
+                        "KeyType": "HASH", 
+                        "AttributeName": "PK"
+                    }, 
+                    {
+                        "KeyType": "RANGE", 
+                        "AttributeName": "productsCreatedAt"
+                    }
+                ], 
+                "IndexArn": "arn:aws:dynamodb:ddblocal:000000000000:table/digital_form/index/productsAndCreatedAt", 
+                "ItemCount": 1
+            }
+        ], 
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0, 
+            "WriteCapacityUnits": 5, 
+            "LastIncreaseDateTime": 0.0, 
+            "ReadCapacityUnits": 5, 
+            "LastDecreaseDateTime": 0.0
+        }, 
+        "TableSizeBytes": 425, 
+        "TableName": "digital_form", 
+        "TableStatus": "ACTIVE", 
+        "KeySchema": [
+            {
+                "KeyType": "HASH", 
+                "AttributeName": "PK"
+            }, 
+            {
+                "KeyType": "RANGE", 
+                "AttributeName": "SK"
+            }
+        ], 
+        "ItemCount": 3, 
+        "CreationDateTime": 1610243139.827
+    }
+}
