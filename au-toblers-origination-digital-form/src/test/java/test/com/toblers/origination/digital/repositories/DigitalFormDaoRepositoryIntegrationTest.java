@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import software.amazon.awssdk.core.async.SdkPublisher;
@@ -34,11 +35,11 @@ import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = OpenAPI2SpringBoot.class)
 @WebAppConfiguration
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 //@TestPropertySource(properties = {
-//        "amazon.dynamodb.endpoint=http://localhost:8000/",
-//        "amazon.aws.accesskey=tw725l",
-//        "amazon.aws.secretkey=ip3qk" })
+//        "amazon.dynamodb.endpoint=http://dynamodb.ap-southeast-2.amazonaws.com/",
+//        "amazon.aws.accesskey=bbb",
+//        "amazon.aws.secretkey=xxx" })
 public class DigitalFormDaoRepositoryIntegrationTest {
 
     @Autowired
@@ -89,7 +90,7 @@ public class DigitalFormDaoRepositoryIntegrationTest {
         DigitalFormDao form = new DigitalFormDao();
         form.setPk("FORM#ABC123");
         form.setSk("INFO#ABC123");
-        form.setProducts("EGA");
+        form.setProducts("CMG");
         form.setStatus("IC");
         form.setCreatedAt("102002012021");
         form.setProductsCreatedAt("EGA#102002012021");
