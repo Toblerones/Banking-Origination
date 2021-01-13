@@ -15,8 +15,8 @@ provider "aws" {
 resource "aws_dynamodb_table" "banking-origination-dynamodb" {
   name           = "digital_form"
   billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
+  read_capacity  = 1
+  write_capacity = 1
   hash_key       = "PK"
   range_key      = "SK"
 
@@ -39,8 +39,8 @@ resource "aws_dynamodb_table" "banking-origination-dynamodb" {
     name            = "invertedIndex"
     hash_key        = "SK"
     range_key       = "PK"
-    write_capacity  = 5
-    read_capacity   = 5
+    write_capacity  = 1
+    read_capacity   = 1
     projection_type = "ALL"
   }
 
@@ -48,8 +48,8 @@ resource "aws_dynamodb_table" "banking-origination-dynamodb" {
     name            = "productsAndCreatedAt"
     hash_key        = "PK"
     range_key       = "productsCreatedAt"
-    write_capacity  = 5
-    read_capacity   = 5
+    write_capacity  = 1
+    read_capacity   = 1
     projection_type = "ALL"
   }
 
