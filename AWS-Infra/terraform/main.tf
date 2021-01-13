@@ -30,6 +30,11 @@ resource "aws_dynamodb_table" "banking-origination-dynamodb" {
     type = "S"
   }
 
+  attribute {
+    name = "productsCreatedAt"
+    type = "S"
+  }
+
   global_secondary_index {
     name            = "invertedIndex"
     hash_key        = "SK"
@@ -42,10 +47,10 @@ resource "aws_dynamodb_table" "banking-origination-dynamodb" {
   global_secondary_index {
     name            = "productsAndCreatedAt"
     hash_key        = "PK"
-    range_key       = "PK"
+    range_key       = "productsCreatedAt"
     write_capacity  = 5
     read_capacity   = 5
-    projection_type = "productsCreatedAt"
+    projection_type = "ALL"
   }
 
   stream_enabled   = true
