@@ -9,4 +9,6 @@ def lambda_handler(event, context):
         print(record['eventID'])
         print(record['eventName'])
         print("DynamoDB Record: " + json.dumps(record['dynamodb'], indent=2))
+
+        #Then push to SQS.? Or maybe try kenisis.
     return 'Successfully processed {} records.'.format(len(event['Records']))
