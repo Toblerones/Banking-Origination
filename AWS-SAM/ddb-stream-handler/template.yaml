@@ -23,7 +23,7 @@ Resources:
         DynamoDB1:
           Type: DynamoDB
           Properties:
-            Stream: arn:aws:dynamodb:ddblocal:000000000000:table/digital_form/stream/2021-01-10T05:13:58.423
+            Stream: arn:aws:dynamodb:ap-southeast-2:297633139939:table/digital_form
             StartingPosition: LATEST
             BatchSize: 1
             Enabled: true
