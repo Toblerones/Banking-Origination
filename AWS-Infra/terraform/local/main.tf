@@ -9,23 +9,25 @@ provider "aws" {
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
   region  = "ap-southeast-2"
+  s3_force_path_style         = true
 
   endpoints {
+    iam       = "http://0.0.0.0:4593"
     s3        = "http://0.0.0.0:4572"
     lambda    = "http://0.0.0.0:4574"
     dynamodb  = "http://0.0.0.0:4569"
   }
 }
 
-resource "aws_s3_bucket" "origination_bucket" {
-  bucket = "lambda_bucket"
+resource "aws_s3_bucket" "origination-bucket" {
+  bucket = "lambda-bucket"
   acl    = "private"
 }
 
 resource "aws_lambda_function" "origination_lambda" {
   function_name = "ddb_stream_handler"
   description   = "Handling DynamoDB Stream"
-  runtime       = "python3"
+  runtime       = "python3.6"
   handler       = "app.lambda_handler"
 
   filename = "lambda.zip"
@@ -33,7 +35,7 @@ resource "aws_lambda_function" "origination_lambda" {
 
   environment {
     variables = {
-      DATA_BUCKET = aws_s3_bucket.origination_bucket.bucket,
+      DATA_BUCKET = aws_s3_bucket.origination-bucket.bucket,
     }
   }
 }
@@ -71,7 +73,7 @@ resource "aws_iam_policy" "s3_read_policy" {
           "s3:Get*",
           "s3:List*"
       ],
-      "Resource": "${aws_s3_bucket.origination_bucket.arn}"
+      "Resource": "${aws_s3_bucket.origination-bucket.arn}"
     }
   ]
 }
