@@ -1,0 +1,1 @@
+sam local invoke "DdbStreamHandler" -e ./events/event.json
