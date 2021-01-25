@@ -19,6 +19,7 @@ Resources:
       MemorySize: 128
       Timeout: 3
       Policies: []
+      PackageType: Zip
       Events:
         DynamoDB1:
           Type: DynamoDB
