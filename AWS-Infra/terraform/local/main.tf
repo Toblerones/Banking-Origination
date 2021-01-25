@@ -3,19 +3,19 @@ terraform {
 }
 
 provider "aws" {
-  access_key = "mock_access_key"
-  secret_key = "mock_secret_key"
+  access_key                  = "mock_access_key"
+  secret_key                  = "mock_secret_key"
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
-  region  = "ap-southeast-2"
+  region                      = "ap-southeast-2"
   s3_force_path_style         = true
 
   endpoints {
-    iam       = "http://0.0.0.0:4593"
-    s3        = "http://0.0.0.0:4572"
-    lambda    = "http://0.0.0.0:4574"
-    dynamodb  = "http://0.0.0.0:4569"
+    iam      = "http://0.0.0.0:4593"
+    s3       = "http://0.0.0.0:4572"
+    lambda   = "http://0.0.0.0:4574"
+    dynamodb = "http://0.0.0.0:4569"
   }
 }
 
@@ -24,21 +24,21 @@ resource "aws_s3_bucket" "origination-bucket" {
   acl    = "private"
 }
 
-resource "aws_lambda_function" "origination_lambda" {
-  function_name = "ddb_stream_handler"
-  description   = "Handling DynamoDB Stream"
-  runtime       = "python3.6"
-  handler       = "app.lambda_handler"
-
-  filename = "lambda.zip"
-  role     = aws_iam_role.lambda_exec.arn
-
-  environment {
-    variables = {
-      DATA_BUCKET = aws_s3_bucket.origination-bucket.bucket,
-    }
-  }
-}
+//resource "aws_lambda_function" "origination_lambda" {
+//  function_name = "ddb_stream_handler"
+//  description   = "Handling DynamoDB Stream"
+//  runtime       = "python3.6"
+//  handler       = "app.lambda_handler"
+//
+//  filename = "lambda.zip"
+//  role     = aws_iam_role.lambda_exec.arn
+//
+//  environment {
+//    variables = {
+//      DATA_BUCKET = aws_s3_bucket.origination-bucket.bucket,
+//    }
+//  }
+//}
 
 resource "aws_iam_role" "lambda_exec" {
   name = "example_lambda"
@@ -90,7 +90,7 @@ resource "aws_iam_role_policy_attachment" "attach_basic_execution_to_lambda" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_dynamodb_table" "banking-origination-dynamodb" {
+resource "aws_dynamodb_table" "banking_origination_dynamodb" {
   name           = "digital_form"
   billing_mode   = "PROVISIONED"
   read_capacity  = 1
@@ -131,11 +131,12 @@ resource "aws_dynamodb_table" "banking-origination-dynamodb" {
     projection_type = "ALL"
   }
 
-  stream_enabled   = true
-  stream_view_type = "NEW_AND_OLD_IMAGES"
+  // BUG in local - hanging.
+//  stream_enabled   = true
+//  stream_view_type = "NEW_AND_OLD_IMAGES"
 
   tags = {
-    Name        = "origination-digital-form"
+    Name        = "origination_digital_form"
     Environment = "testing"
   }
 }
