@@ -9,7 +9,6 @@ services:
     environment:
       - SERVICES=dynamodb,dynamodbstream,iam,lambda,s3
       - DEBUG=${DEBUG- }
-      - DEFAULT_REGION=ap-southeast-2
       - DATA_DIR=${DATA_DIR- }
       - PORT_WEB_UI=${PORT_WEB_UI- }
       - LAMBDA_EXECUTOR=docker-reuse
