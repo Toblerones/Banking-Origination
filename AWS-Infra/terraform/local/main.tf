@@ -1,5 +1,11 @@
 terraform {
   backend "local" {}
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
 }
 
 provider "aws" {
@@ -12,10 +18,10 @@ provider "aws" {
   s3_force_path_style         = true
 
   endpoints {
-    iam      = "http://0.0.0.0:4593"
-    s3       = "http://0.0.0.0:4572"
-    lambda   = "http://0.0.0.0:4574"
-    dynamodb = "http://0.0.0.0:4569"
+    iam      = "http://0.0.0.0:4599"
+    s3       = "http://0.0.0.0:4599"
+    lambda   = "http://0.0.0.0:4599"
+    dynamodb = "http://0.0.0.0:4599"
   }
 }
 
@@ -24,21 +30,34 @@ resource "aws_s3_bucket" "origination-bucket" {
   acl    = "private"
 }
 
-//resource "aws_lambda_function" "origination_lambda" {
-//  function_name = "ddb_stream_handler"
-//  description   = "Handling DynamoDB Stream"
-//  runtime       = "python3.6"
-//  handler       = "app.lambda_handler"
-//
-//  filename = "lambda.zip"
-//  role     = aws_iam_role.lambda_exec.arn
-//
+data "archive_file" "dummy_lambda" {
+
+  output_path = "./dummy_lambda.zip"
+  type        = "zip"
+
+  source {
+    content = "dummy"
+    filename = "app.py"
+  }
+
+}
+
+// provision a empty shell
+resource "aws_lambda_function" "origination_lambda" {
+  function_name = "ddb_stream_handler"
+  description   = "Handling DynamoDB Stream"
+  runtime       = "python3.7"
+  handler       = "app.lambda_handler"
+
+  filename = "dummy_lambda.zip"
+  role     = aws_iam_role.lambda_exec.arn
+
 //  environment {
 //    variables = {
 //      DATA_BUCKET = aws_s3_bucket.origination-bucket.bucket,
 //    }
 //  }
-//}
+}
 
 resource "aws_iam_role" "lambda_exec" {
   name = "example_lambda"
