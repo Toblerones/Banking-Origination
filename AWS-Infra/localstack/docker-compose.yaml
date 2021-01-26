@@ -2,11 +2,12 @@ version: "2.1"
 
 services:
   localstack:
-    image: localstack/localstack:0.10.5
+    image: localstack/localstack:0.12.5
     ports:
-      - "4567-4597:4567-4597"
+      - "4567-4599:4567-4599"
       - "${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"
     environment:
+      - EDGE_PORT=4599
       - SERVICES=dynamodb,dynamodbstream,iam,lambda,s3
       - DEBUG=${DEBUG- }
       - DATA_DIR=${DATA_DIR- }
