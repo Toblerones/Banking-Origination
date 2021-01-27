@@ -22,6 +22,8 @@ provider "aws" {
     s3       = "http://0.0.0.0:4566"
     lambda   = "http://0.0.0.0:4566"
     dynamodb = "http://0.0.0.0:4566"
+    sns      = "http://0.0.0.0:4566"
+    sqs      = "http://0.0.0.0:4566"
   }
 }
 
@@ -178,11 +180,106 @@ resource "aws_dynamodb_table" "banking_origination_dynamodb" {
   //aws lambda create-event-source-mapping --function-name ProcessDynamoDBRecords \
   // --batch-size 100 --starting-position LATEST --event-source DynamoDB-stream-arn
   //  - see https://docs.aws.amazon.com/lambda/latest/dg/with-ddb-example.html
-  //  stream_enabled   = true
-  //  stream_view_type = "NEW_AND_OLD_IMAGES"
+  stream_enabled   = true
+  stream_view_type = "NEW_AND_OLD_IMAGES"
 
   tags = {
     Name        = "origination_digital_form"
     Environment = "testing"
+  }
+}
+
+resource "aws_sns_topic" "ddb_stream_cdc" {
+  name            = "ddb_stream_cdc"
+  delivery_policy = <<JSON
+{
+  "http": {
+    "defaultHealthyRetryPolicy": {
+      "minDelayTarget"    : 20,
+      "maxDelayTarget"    : 600,
+      "numRetries"        : 5,
+      "backoffFunction"   : "exponential"
+    },
+    "disableSubscriptionOverrides": false
+  }
+}
+JSON
+}
+
+resource "aws_sqs_queue" "ddbstream_placed_queue_1" {
+  name                       = "ddbstream_placed_queue_1"
+  redrive_policy             = "{\"deadLetterTargetArn\":\"${aws_sqs_queue.ddbstream_placed_dlq_1.arn}\",\"maxReceiveCount\":5}"
+  visibility_timeout_seconds = 300
+}
+
+resource "aws_sqs_queue" "ddbstream_placed_dlq_1" {
+  name = "ddbstream_placed_dlq_1"
+}
+
+//Subscribe SQS to the SNS event message
+resource "aws_sns_topic_subscription" "ddbstream_placed_subscription" {
+  topic_arn = "ddb_stream_cdc"
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.ddbstream_placed_queue_1.arn
+}
+
+//resource "aws_sqs_queue_policy" "ddbstream_placed_queue_1_policy" {
+//  queue_url = aws_sqs_queue.ddbstream_placed_queue_1.id
+//  policy    = data.aws_iam_policy_document.ddbstream_placed_queue_1_iam_policy.json
+//}
+//
+//data "aws_iam_policy_document" "ddbstream_placed_queue_1_iam_policy" {
+//  policy_id = "SQSSendAccess"
+//  statement {
+//    sid       = "SQSSendAccessStatement"
+//    effect    = "Allow"
+//    actions   = ["SQS:SendMessage"]
+//    resources = [aws_sqs_queue.ddbstream_placed_queue_1.arn,]
+//    principals {
+//      identifiers = ["*"]
+//      type        = "*"
+//    }
+//    //    condition {
+//    //      test     = "ArnEquals"
+//    //      values   = ["${aws_sns_topic.ddb_stream_cdc.arn}"]
+//    //      variable = "aws:SourceArn"
+//    //    }
+//  }
+//}
+
+resource "aws_sns_topic_policy" "default" {
+  arn = aws_sns_topic.ddb_stream_cdc.arn
+
+  policy = data.aws_iam_policy_document.sns_topic_policy.json
+}
+
+data "aws_iam_policy_document" "sns_topic_policy" {
+  policy_id = "__default_policy_ID"
+
+  statement {
+    actions = [
+      "SNS:Subscribe",
+      "SNS:SetTopicAttributes",
+      "SNS:RemovePermission",
+      "SNS:Receive",
+      "SNS:Publish",
+      "SNS:ListSubscriptionsByTopic",
+      "SNS:GetTopicAttributes",
+      "SNS:DeleteTopic",
+      "SNS:AddPermission",
+    ]
+
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+
+    resources = [
+      aws_sns_topic.ddb_stream_cdc.arn,
+    ]
+
+    sid = "__default_statement_ID"
   }
 }
