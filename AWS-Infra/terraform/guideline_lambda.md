@@ -14,4 +14,12 @@ aws lambda create-event-source-mapping --function-name ProcessDynamoDBRecords \
   
 - list event mapping
 aws lambda list-event-source-mappings --function-name ProcessDynamoDBRecords
+  
+- lambda log
+1. get stream
+aws logs describe-log-streams --log-group-name "/aws/lambda/ddb_stream_handler" --endpoint-url=http://localhost:4566
+   
+
+2. get log 
+aws logs get-log-events --log-group-name "/aws/lambda/ddb_stream_handler" --log-stream-name 2021/01/27/[LATEST]5ace97d2 --endpoint-url=http://localhost:4566
 
