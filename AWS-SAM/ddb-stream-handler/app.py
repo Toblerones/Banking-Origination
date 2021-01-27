@@ -4,7 +4,7 @@ import json
 
 
 def lambda_handler(event, context):
-    #print("Received event: " + json.dumps(event, indent=2))
+    print("Received event: " + json.dumps(event, indent=2))
     for record in event['Records']:
         print(record['eventID'])
         print(record['eventName'])
