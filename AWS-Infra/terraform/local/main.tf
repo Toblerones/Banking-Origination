@@ -18,10 +18,10 @@ provider "aws" {
   s3_force_path_style         = true
 
   endpoints {
-    iam      = "http://0.0.0.0:4599"
-    s3       = "http://0.0.0.0:4599"
-    lambda   = "http://0.0.0.0:4599"
-    dynamodb = "http://0.0.0.0:4599"
+    iam      = "http://0.0.0.0:4566"
+    s3       = "http://0.0.0.0:4566"
+    lambda   = "http://0.0.0.0:4566"
+    dynamodb = "http://0.0.0.0:4566"
   }
 }
 
@@ -58,6 +58,28 @@ resource "aws_lambda_function" "origination_lambda" {
 //    }
 //  }
 }
+
+//data "archive_file" "dummy_lambda" {
+//
+//  output_path = "./dummy_lambda.zip"
+//  type        = "zip"
+//
+//  source {
+//    content = "dummy"
+//    filename = "ddb.js"
+//  }
+//
+//}
+//resource "aws_lambda_function" "origination_lambda" {
+//  function_name = "ddb_stream_handler"
+//  description   = "Handling DynamoDB Stream"
+//  runtime       = "nodejs12.x"
+//  handler       = "ddb.handler"
+//
+//  filename = "dummy_lambda.zip"
+//  role     = aws_iam_role.lambda_exec.arn
+//
+//}
 
 resource "aws_iam_role" "lambda_exec" {
   name = "example_lambda"
