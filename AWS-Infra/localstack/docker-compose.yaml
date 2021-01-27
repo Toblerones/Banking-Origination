@@ -4,17 +4,19 @@ services:
   localstack:
     image: localstack/localstack:0.12.5
     ports:
-      - "4567-4599:4567-4599"
+      - "4566-4599:4566-4599"
       - "${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"
     environment:
-      - EDGE_PORT=4599
-      - SERVICES=dynamodb,dynamodbstream,iam,lambda,s3
+      - SERVICES=dynamodb,dynamodbstream,iam,lambda,s3,apigateway,sns,sqs
       - DEBUG=${DEBUG- }
       - DATA_DIR=${DATA_DIR- }
       - PORT_WEB_UI=${PORT_WEB_UI- }
-      - LAMBDA_EXECUTOR=docker-reuse
+      - LAMBDA_REMOTE_DOCKER=false
+      - LAMBDA_EXECUTOR=docker
+      - LAMBDA_LOCAL=${TMPDIR:-/tmp/localstack}
       - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
       - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOST_TMP_FOLDER=${TMPDIR:-/tmp/localstack}
     volumes:
       - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
