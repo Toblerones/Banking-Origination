@@ -36,13 +36,14 @@ data "archive_file" "dummy_lambda" {
   type        = "zip"
 
   source {
-    content = "dummy"
+    content  = "dummy"
     filename = "app.py"
   }
 
 }
 
 // provision a empty shell
+// Use aws cli to update function code - see guideline_lambda.md
 resource "aws_lambda_function" "origination_lambda" {
   function_name = "ddb_stream_handler"
   description   = "Handling DynamoDB Stream"
@@ -52,11 +53,11 @@ resource "aws_lambda_function" "origination_lambda" {
   filename = "dummy_lambda.zip"
   role     = aws_iam_role.lambda_exec.arn
 
-//  environment {
-//    variables = {
-//      DATA_BUCKET = aws_s3_bucket.origination-bucket.bucket,
-//    }
-//  }
+  //  environment {
+  //    variables = {
+  //      DATA_BUCKET = aws_s3_bucket.origination-bucket.bucket,
+  //    }
+  //  }
 }
 
 //data "archive_file" "dummy_lambda" {
@@ -173,8 +174,12 @@ resource "aws_dynamodb_table" "banking_origination_dynamodb" {
   }
 
   // BUG in local - hanging.
-//  stream_enabled   = true
-//  stream_view_type = "NEW_AND_OLD_IMAGES"
+  // manual enable
+  //aws lambda create-event-source-mapping --function-name ProcessDynamoDBRecords \
+  // --batch-size 100 --starting-position LATEST --event-source DynamoDB-stream-arn
+  //  - see https://docs.aws.amazon.com/lambda/latest/dg/with-ddb-example.html
+  //  stream_enabled   = true
+  //  stream_view_type = "NEW_AND_OLD_IMAGES"
 
   tags = {
     Name        = "origination_digital_form"
