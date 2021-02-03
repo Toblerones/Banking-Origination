@@ -134,6 +134,12 @@ resource "aws_iam_role_policy_attachment" "attach_basic_execution_to_lambda" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+resource "aws_lambda_event_source_mapping" "example" {
+  event_source_arn  = aws_dynamodb_table.banking_origination_dynamodb.stream_arn
+  function_name     = aws_lambda_function.origination_lambda.arn
+  starting_position = "LATEST"
+}
+
 resource "aws_dynamodb_table" "banking_origination_dynamodb" {
   name           = "digital_form"
   billing_mode   = "PROVISIONED"
@@ -218,34 +224,34 @@ resource "aws_sqs_queue" "ddbstream_placed_dlq_1" {
 
 //Subscribe SQS to the SNS event message
 resource "aws_sns_topic_subscription" "ddbstream_placed_subscription" {
-  topic_arn = "ddb_stream_cdc"
+  topic_arn = aws_sns_topic.ddb_stream_cdc.arn
   protocol  = "sqs"
   endpoint  = aws_sqs_queue.ddbstream_placed_queue_1.arn
 }
 
-//resource "aws_sqs_queue_policy" "ddbstream_placed_queue_1_policy" {
-//  queue_url = aws_sqs_queue.ddbstream_placed_queue_1.id
-//  policy    = data.aws_iam_policy_document.ddbstream_placed_queue_1_iam_policy.json
-//}
-//
-//data "aws_iam_policy_document" "ddbstream_placed_queue_1_iam_policy" {
-//  policy_id = "SQSSendAccess"
-//  statement {
-//    sid       = "SQSSendAccessStatement"
-//    effect    = "Allow"
-//    actions   = ["SQS:SendMessage"]
-//    resources = [aws_sqs_queue.ddbstream_placed_queue_1.arn,]
-//    principals {
-//      identifiers = ["*"]
-//      type        = "*"
-//    }
-//    //    condition {
-//    //      test     = "ArnEquals"
-//    //      values   = ["${aws_sns_topic.ddb_stream_cdc.arn}"]
-//    //      variable = "aws:SourceArn"
-//    //    }
-//  }
-//}
+resource "aws_sqs_queue_policy" "ddbstream_placed_queue_1_policy" {
+  queue_url = aws_sqs_queue.ddbstream_placed_queue_1.id
+  policy    = data.aws_iam_policy_document.ddbstream_placed_queue_1_iam_policy.json
+}
+
+data "aws_iam_policy_document" "ddbstream_placed_queue_1_iam_policy" {
+  policy_id = "SQSSendAccess"
+  statement {
+    sid       = "SQSSendAccessStatement"
+    effect    = "Allow"
+    actions   = ["SQS:SendMessage"]
+    resources = [aws_sqs_queue.ddbstream_placed_queue_1.arn,]
+    principals {
+      identifiers = ["*"]
+      type        = "*"
+    }
+    //    condition {
+    //      test     = "ArnEquals"
+    //      values   = ["${aws_sns_topic.ddb_stream_cdc.arn}"]
+    //      variable = "aws:SourceArn"
+    //    }
+  }
+}
 
 resource "aws_sns_topic_policy" "default" {
   arn = aws_sns_topic.ddb_stream_cdc.arn
