@@ -1,8 +1,9 @@
 package com.toblers.origination.digital.services.impl;
 
+import com.toblers.origination.digital.lock.DistributedLock;
 import com.toblers.origination.digital.model.DigitalForm;
 import com.toblers.origination.digital.repositories.DigitalFormRepository;
-import com.toblers.origination.digital.services.DigitalFormService;
+import com.toblers.origination.digital.services.DigitalFormAbstractService;
 import com.toblers.origination.digital.services.ServiceConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service("DEFAULT-DIGITAL_FORM-SERVICE")
-public class DigitalFormInitService implements DigitalFormService {
+public class DigitalFormInitService extends DigitalFormAbstractService {
 
     @Autowired
     DigitalFormRepository digitalFormRepository;
 
+    @Autowired
+    public DistributedLock distributedLock;
+
     @Override
     public boolean handleDigitalForm(DigitalForm digitalForm) {
+        lock(digitalForm.getFormId());
 
         if(StringUtils.isEmpty(digitalForm.getFormId())){
             String formId = digitalForm.getCustomer().get(0).getFirstName().substring(0,1) +
@@ -33,7 +38,8 @@ public class DigitalFormInitService implements DigitalFormService {
             digitalFormRepository.updateDigitalForm(digitalForm);
         }
 
-
+        release(digitalForm.getFormId());
         return true;
     }
+
 }
